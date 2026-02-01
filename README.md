@@ -35,7 +35,7 @@ graph LR
 # Port the service listens on
 ADDR=:8080
 # The base URL for generated links
-BASE_URL=http://localhost:8080
+BASE_URL=http://localhost:8081
 
 # Use postgre or Go maps for storage
 STORAGE=postgre or memory
