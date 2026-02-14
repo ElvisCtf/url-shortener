@@ -12,7 +12,7 @@ type Repository interface {
 }
 
 func NewRepo(storage string) Repository {
-    if storage == "postgre" {
+    if storage == "postgres" {
         return NewPostgreRepo()
     } else {
         return NewMemoryRepo()

@@ -37,8 +37,11 @@ ADDR=:8080
 # The base URL for generated links
 BASE_URL=http://localhost:8081
 
-# Use postgre or Go maps for storage
-STORAGE=postgre or memory
+# Set GIN_MODE as debug or release
+GIN_MODE=debug
+
+# Set STORAGE as postgres or memory, which uses a Go maps
+STORAGE=postgres
 
 DB_HOST=postgres16
 DB_PORT=5432
@@ -57,6 +60,9 @@ TZ=UTC
 ADDR=:8081
 # The base URL for generated links
 BASE_URL=http://localhost:8081
+
+# Set GIN_MODE as debug or release
+GIN_MODE=release
 
 DB_HOST=postgres16
 DB_PORT=5432
@@ -93,6 +99,13 @@ POST /shorten
 | :------------- | :------- | :------------------------ |
 | `original_url` | `string` | **Required** original url |
 
+**Example**
+```json
+{
+    "original_url": "https://www.dummy-example.com"
+}
+```
+
 **200 Response**
 | JSON Parameter | Type     | Description  |
 | :------------- | :------- | :----------- |
@@ -123,6 +136,7 @@ GET /:id
 - Better Error handling
 - Better Validation
 - Better Logging
+- SPA for generating short URL
 - Admin to manage short URL
 - Analytics service
 - To be added
