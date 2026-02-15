@@ -22,7 +22,7 @@ The application is decomposed into two distinct services that share a single Pos
 
 ```mermaid
 graph LR
-    Client -->|POST /shorten| S[Shorten Service :8080];
+    Client -->|POST /api/shorten| S[Shorten Service :8080];
     Client -->|GET /:code| R[Redirect Service :8081];
     S --> DB[(PostgreSQL)];
     R --> DB;
@@ -92,7 +92,7 @@ docker-compose up --build
 
 #### Convert a URL to a short URL
 ```http
-POST /shorten
+POST /api/shorten
 ```
 **Request**
 | JSON Parameter | Type     | Description               |
