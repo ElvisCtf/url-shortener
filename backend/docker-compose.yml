@@ -1,3 +1,5 @@
+name: url-shortener-app
+
 services:
   postgres16:
     image: postgres:16
@@ -17,19 +19,19 @@ services:
       retries: 5
 
   shorten:
-      build:
-        context: ./shorten-service
-        dockerfile: Dockerfile
-      container_name: shorten_service
-      ports:
-        - "8080:8080"
-      volumes:
-        - ./.env:/root/.env
-      env_file:
-        - ./shorten-service/.env
-      depends_on:
-        postgres16:
-          condition: service_healthy
+    build:
+      context: ./shorten-service
+      dockerfile: Dockerfile
+    container_name: shorten_service
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.env:/root/.env
+    env_file:
+      - ./shorten-service/.env
+    depends_on:
+      postgres16:
+        condition: service_healthy
     
   redirect:
     build:
