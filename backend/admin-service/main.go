@@ -1,11 +1,20 @@
 package main
 
-import "fmt"
-
-func init() {
-	fmt.Println("Initializing resources...")
-}
+import (
+	"admin-service/internal/features/auth"
+	"admin-service/internal/util"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("App started.")
+	addr := util.Env("ADDR", ":8082")
+
+	router := gin.Default()
+
+	authService := auth.NewAuthService()
+	authController := auth.NewAuthController(authService)
+	authRouter := auth.NewAuthRouter(authController)
+	authRouter.SetupRoutes(&router.RouterGroup)
+
+	router.Run(addr)
 }

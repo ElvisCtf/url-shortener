@@ -26,7 +26,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./.env:/root/.env
+      - ./.env:/build/.env
     env_file:
       - ./shorten-service/.env
     depends_on:
@@ -41,9 +41,24 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ./.env:/root/.env
+      - ./.env:/build/.env
     env_file:
       - ./redirect-service/.env
+    depends_on:
+      postgres16:
+        condition: service_healthy
+
+  admin:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    container_name: admin_service
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./.env:/build/.env
+    env_file:
+      - ./admin-service/.env
     depends_on:
       postgres16:
         condition: service_healthy
