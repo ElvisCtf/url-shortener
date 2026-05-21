@@ -7,13 +7,21 @@ import (
 )
 
 func main() {
-	addr := util.Env("ADDR", ":8082")
+	config, err := util.LoadConfig()
+	if err != nil {
+		panic("Failed to load config: " + err.Error())
+	}
+	addr := config.Addr
+	gin.SetMode(config.GinMode)
 
 	router := gin.Default()
 
+	// Dependency Injection
 	authService := auth.NewAuthService()
 	authController := auth.NewAuthController(authService)
 	authRouter := auth.NewAuthRouter(authController)
+
+	// Setup Routes
 	authRouter.SetupRoutes(&router.RouterGroup)
 
 	router.Run(addr)
