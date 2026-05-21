@@ -15,5 +15,5 @@ func NewAuthRouter(c *AuthController) *AuthRouter {
 func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup) {
 	authGroup := rg.Group("/auth")
 
-	authGroup.POST("/register", r.controller.Register)
+	authGroup.POST("/admins", r.controller.Register)
 }

@@ -22,5 +22,5 @@ func (c *AuthController) Register(ctx *gin.Context) {
 
 	c.service.Register(req.Email, req.Password)
 
-	ctx.JSON(http.StatusOK, gin.H{"token": "register"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Registration successful"})
 }

@@ -4,19 +4,26 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthService struct{}
+type AuthService struct {
+	repo *AdminRepository
+}
 
-func NewAuthService() *AuthService {
-	return &AuthService{}
+func NewAuthService(repo *AdminRepository) *AuthService {
+	return &AuthService{repo: repo}
 }
 
 func (s *AuthService) Register(email, password string) (bool, error) {
-	_, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return false, err
+	hashPassword, hashErr := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if hashErr != nil {
+		return false, hashErr
 	}
 
-	// Todo: Create admin in database
+	if dbErr := s.repo.Create(&Admin{
+		Email:        email,
+		HashPassword: string(hashPassword),
+	}); dbErr != nil {
+		return false, dbErr
+	}
 
 	return true, nil
 }
