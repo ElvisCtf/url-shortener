@@ -30,7 +30,7 @@ func main() {
 	authRouter := auth.NewAuthRouter(authController)
 
 	// Setup Routes
-	authRouter.SetupRoutes(&router.RouterGroup)
+	authRouter.SetupRoutes(&router.RouterGroup, config)
 
 	router.Run(addr)
 }
