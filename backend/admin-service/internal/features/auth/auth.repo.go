@@ -2,22 +2,23 @@ package auth
 
 import (
 	"admin-service/internal/util/database"
+
 	"gorm.io/gorm"
 )
 
-type AdminRepository struct {
+type AuthRepository struct {
 	Db *gorm.DB
 }
 
-func NewAdminRepository(db *gorm.DB) *AdminRepository {
-	return &AdminRepository{Db: db}
+func NewAuthRepository(db *gorm.DB) *AuthRepository {
+	return &AuthRepository{Db: db}
 }
 
-func (r *AdminRepository) Create(admin *database.Admin) error {
+func (r *AuthRepository) Create(admin *database.Admin) error {
 	return r.Db.Create(admin).Error
 }
 
-func (r *AdminRepository) GetByID(id uint) (*database.Admin, error) {
+func (r *AuthRepository) GetByID(id uint) (*database.Admin, error) {
 	var admin database.Admin
 	if err := r.Db.First(&admin, id).Error; err != nil {
 		return nil, err
@@ -25,7 +26,7 @@ func (r *AdminRepository) GetByID(id uint) (*database.Admin, error) {
 	return &admin, nil
 }
 
-func (r *AdminRepository) GetByEmail(email string) (*database.Admin, error) {
+func (r *AuthRepository) GetByEmail(email string) (*database.Admin, error) {
 	var admin database.Admin
 	if err := r.Db.Where("email = ?", email).First(&admin).Error; err != nil {
 		return nil, err
@@ -33,10 +34,14 @@ func (r *AdminRepository) GetByEmail(email string) (*database.Admin, error) {
 	return &admin, nil
 }
 
-func (r *AdminRepository) Update(admin *database.Admin) error {
+func (r *AuthRepository) Update(admin *database.Admin) error {
 	return r.Db.Save(admin).Error
 }
 
-func (r *AdminRepository) Delete(id uint) error {
+func (r *AuthRepository) Delete(id uint) error {
 	return r.Db.Delete(&database.Admin{}, id).Error
+}
+
+func (r *AuthRepository) SaveRefreshToken(token *database.RefreshToken) error {
+	return r.Db.Create(token).Error
 }

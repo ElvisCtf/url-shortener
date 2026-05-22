@@ -24,8 +24,8 @@ func main() {
 	}
 
 	// Dependency Injection
-	authRepo := auth.NewAdminRepository(db)
-	authService := auth.NewAuthService(authRepo)
+	authRepo := auth.NewAuthRepository(db)
+	authService := auth.NewAuthService(authRepo, config)
 	authController := auth.NewAuthController(authService)
 	authRouter := auth.NewAuthRouter(authController)
 

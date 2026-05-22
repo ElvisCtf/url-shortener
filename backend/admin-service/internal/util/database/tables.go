@@ -15,7 +15,7 @@ type Admin struct {
 }
 
 type RefreshToken struct {
-	ID        string    `gorm:"primaryKey;autoIncrement"`
+	ID        uint      `gorm:"primaryKey"`
 	AdminID   uint      `gorm:"not null;index"`
 	Token     string    `gorm:"type:varchar(255);uniqueIndex;not null"`
 	ExpiresAt time.Time `gorm:"not null;index"`
