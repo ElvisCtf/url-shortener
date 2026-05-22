@@ -18,15 +18,7 @@ func (r *AuthRepository) Create(admin *database.Admin) error {
 	return r.Db.Create(admin).Error
 }
 
-func (r *AuthRepository) GetByID(id uint) (*database.Admin, error) {
-	var admin database.Admin
-	if err := r.Db.First(&admin, id).Error; err != nil {
-		return nil, err
-	}
-	return &admin, nil
-}
-
-func (r *AuthRepository) GetByEmail(email string) (*database.Admin, error) {
+func (r *AuthRepository) GetAdminByEmail(email string) (*database.Admin, error) {
 	var admin database.Admin
 	if err := r.Db.Where("email = ?", email).First(&admin).Error; err != nil {
 		return nil, err
@@ -34,11 +26,11 @@ func (r *AuthRepository) GetByEmail(email string) (*database.Admin, error) {
 	return &admin, nil
 }
 
-func (r *AuthRepository) Update(admin *database.Admin) error {
+func (r *AuthRepository) UpdateAdmin(admin *database.Admin) error {
 	return r.Db.Save(admin).Error
 }
 
-func (r *AuthRepository) Delete(id uint) error {
+func (r *AuthRepository) DeleteAdmin(id uint) error {
 	return r.Db.Delete(&database.Admin{}, id).Error
 }
 

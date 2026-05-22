@@ -41,7 +41,7 @@ func (s *AuthService) Register(email, password string) (bool, error) {
 }
 
 func (s *AuthService) Login(email, password string) (*TokenPair, error) {
-	admin, err := s.repo.GetByEmail(email)
+	admin, err := s.repo.GetAdminByEmail(email)
 	if err != nil {
 		return nil, err
 	}
