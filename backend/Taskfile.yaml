@@ -4,3 +4,9 @@ tasks:
   docker:up:
     cmds:
       - docker compose up --build
+
+  reset:db:
+    desc: Reset the admin-service database (drop and migrate tables)
+    dir: admin-service/cmd/reset
+    cmds:
+      - go run main.go

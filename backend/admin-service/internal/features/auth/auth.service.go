@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"admin-service/internal/util/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +19,7 @@ func (s *AuthService) Register(email, password string) (bool, error) {
 		return false, hashErr
 	}
 
-	if dbErr := s.repo.Create(&Admin{
+	if dbErr := s.repo.Create(&database.Admin{
 		Email:        email,
 		HashPassword: string(hashPassword),
 	}); dbErr != nil {

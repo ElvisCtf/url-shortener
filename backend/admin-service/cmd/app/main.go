@@ -3,6 +3,7 @@ package main
 import (
 	"admin-service/internal/features/auth"
 	"admin-service/internal/util"
+	"admin-service/internal/util/database"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,8 +18,7 @@ func main() {
 
 	router := gin.Default()
 
-	// Initialize GORM DB
-	db, err := util.InitGormDB(config)
+	db, err := database.InitGormDB(config)
 	if err != nil {
 		panic("Failed to connect to database: " + err.Error())
 	}

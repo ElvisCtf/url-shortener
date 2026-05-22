@@ -1,8 +1,8 @@
 package util
 
 import (
-	"os"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 type Config struct {

@@ -1,13 +1,13 @@
-package util
+package database
 
 import (
+	"admin-service/internal/util"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"admin-service/internal/features/auth"
 )
 
-func InitGormDB(cfg *Config) (*gorm.DB, error) {
+func InitGormDB(cfg *util.Config) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
 		cfg.DBHost, cfg.DBUser, cfg.DBPass, cfg.DBName, cfg.DBPort, cfg.DBSSLMode, cfg.TZ,
 	)
@@ -15,9 +15,11 @@ func InitGormDB(cfg *Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Auto-migrate Admin model
-	if err := db.AutoMigrate(&auth.Admin{}); err != nil {
+
+	// Auto-migrate Admin and RefreshToken models
+	if err := db.AutoMigrate(&Admin{}, &RefreshToken{}); err != nil {
 		return nil, err
 	}
+
 	return db, nil
 }

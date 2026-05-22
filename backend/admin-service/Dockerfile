@@ -13,7 +13,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /app .
+RUN go build -o /app ./cmd/app
 
 # Stage 2: Run
 FROM alpine:3.21 AS final
