@@ -14,7 +14,7 @@ func NewAuthRepository(db *gorm.DB) *AuthRepository {
 	return &AuthRepository{Db: db}
 }
 
-func (r *AuthRepository) Create(admin *database.Admin) error {
+func (r *AuthRepository) CreateAdmin(admin *database.Admin) error {
 	return r.Db.Create(admin).Error
 }
 
@@ -34,6 +34,10 @@ func (r *AuthRepository) DeleteAdmin(id uint) error {
 	return r.Db.Delete(&database.Admin{}, id).Error
 }
 
-func (r *AuthRepository) SaveRefreshToken(token *database.RefreshToken) error {
+func (r *AuthRepository) CreateRefreshToken(token *database.RefreshToken) error {
 	return r.Db.Create(token).Error
+}
+
+func (r *AuthRepository) RevokeRefreshTokens(refreshToken string) error {
+	return r.Db.Model(&database.RefreshToken{}).Where("token = ?", refreshToken).Update("revoked", true).Error
 }

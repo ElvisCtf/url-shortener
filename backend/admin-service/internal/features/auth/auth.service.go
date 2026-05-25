@@ -30,7 +30,7 @@ func (s *AuthService) Register(email, password string) (bool, error) {
 		return false, hashErr
 	}
 
-	if dbErr := s.repo.Create(&database.Admin{
+	if dbErr := s.repo.CreateAdmin(&database.Admin{
 		Email:        email,
 		HashPassword: string(hashPassword),
 	}); dbErr != nil {
@@ -71,7 +71,7 @@ func (s *AuthService) Login(email, password string) (*TokenPair, error) {
 		CreatedAt: time.Now(),
 		Revoked:   false,
 	}
-	if err := s.repo.SaveRefreshToken(rt); err != nil {
+	if err := s.repo.CreateRefreshToken(rt); err != nil {
 		return nil, err
 	}
 
@@ -79,6 +79,10 @@ func (s *AuthService) Login(email, password string) (*TokenPair, error) {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func (s *AuthService) Logout(refreshToken string) error {
+	return s.repo.RevokeRefreshTokens(refreshToken)
 }
 
 func generateJWTWithSecret(adminID uint, email string, seconds int, secret string) (string, error) {
@@ -89,7 +93,7 @@ func generateJWTWithSecret(adminID uint, email string, seconds int, secret strin
 	claims := jwt.MapClaims{
 		"admin_id": adminID,
 		"email":    email,
-		"exp": jwt.NewNumericDate(time.Now().Add(duration)),
+		"exp":      jwt.NewNumericDate(time.Now().Add(duration)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))

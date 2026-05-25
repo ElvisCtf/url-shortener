@@ -23,10 +23,5 @@ func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup, config *util.Config) {
 	// /auth/login does not require JWT to access, but will return JWT if credentials are valid
 	authGroup.POST("/login", RequireAuth(config, false), r.controller.Login)
 
-	// /auth/health requires JWT
-	if config.GinMode == "debug" {
-		authGroup.GET("/health", RequireAuth(config, true), func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{"status": "ok"})
-		})
-	}
+	authGroup.POST("/logout", RequireAuth(config, true), r.controller.Logout)
 }

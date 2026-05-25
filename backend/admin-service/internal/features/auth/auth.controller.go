@@ -1,16 +1,18 @@
 package auth
 
 import (
+	"admin-service/internal/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type AuthController struct {
 	service *AuthService
+	config  *util.Config
 }
 
-func NewAuthController(s *AuthService) *AuthController {
-	return &AuthController{service: s}
+func NewAuthController(s *AuthService, config *util.Config) *AuthController {
+	return &AuthController{service: s, config: config}
 }
 
 func (c *AuthController) Register(ctx *gin.Context) {
@@ -39,8 +41,24 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	}
 
 	// TODO: same-site
-	ctx.SetCookie("refreshToken", tokens.RefreshToken, c.service.config.RefreshTokenExpire, "/", c.service.config.Domain, true, true)
+	ctx.SetCookie("refreshToken", tokens.RefreshToken, c.config.RefreshTokenExpire, "/", c.config.Domain, true, true)
 	ctx.JSON(http.StatusOK, gin.H{
 		"accessToken": tokens.AccessToken,
 	})
+}
+
+func (c *AuthController) Logout(ctx *gin.Context) {
+       refreshToken, err := ctx.Cookie("refreshToken")
+       if err != nil || refreshToken == "" {
+	       ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing refresh token cookie"})
+	       return
+       }
+
+       if err := c.service.Logout(refreshToken); err != nil {
+	       ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to logout"})
+	       return
+       }
+
+       ctx.SetCookie("refreshToken", "", -1, "/", c.config.Domain, true, true)
+       ctx.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
