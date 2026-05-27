@@ -1,4 +1,4 @@
-module admin-service
+module example.com/admin-service
 
 go 1.25.6
 

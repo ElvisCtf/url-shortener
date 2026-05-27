@@ -1,9 +1,9 @@
 package main
 
 import (
-	"admin-service/internal/features/auth"
-	"admin-service/internal/util"
-	"admin-service/internal/util/database"
+	"example.com/admin-service/internal/features/auth"
+	"example.com/admin-service/internal/util"
+	"example.com/admin-service/internal/util/database"
 
 	"github.com/gin-gonic/gin"
 )

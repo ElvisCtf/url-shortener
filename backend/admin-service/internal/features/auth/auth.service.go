@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"admin-service/internal/util"
-	"admin-service/internal/util/database"
 	"errors"
+	"example.com/admin-service/internal/util"
+	"example.com/admin-service/internal/util/database"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

@@ -1,7 +1,7 @@
 package database
 
 import (
-	"admin-service/internal/util"
+	"example.com/admin-service/internal/util"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"admin-service/internal/util"
+	"example.com/admin-service/internal/util"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"log/slog"
+	"net/http"
 )
 
 type AuthController struct {

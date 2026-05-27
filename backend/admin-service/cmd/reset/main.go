@@ -1,8 +1,8 @@
 package main
 
 import (
-	"admin-service/internal/util"
-	"admin-service/internal/util/database"
+	"example.com/admin-service/internal/util"
+	"example.com/admin-service/internal/util/database"
 	"fmt"
 	"gorm.io/gorm"
 	"log"

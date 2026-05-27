@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"admin-service/internal/util/database"
+	"example.com/admin-service/internal/util/database"
 
 	"gorm.io/gorm"
 )
