@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"redirect-service/internal/model"
-	"redirect-service/internal/util"
+	"example.com/redirect-service/internal/model"
+	"example.com/redirect-service/internal/util"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -29,7 +29,7 @@ func newPostgreRepo() *PostgreRepo {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil { 
+	if err != nil {
 		log.Fatal(err)
 		return nil
 	}
@@ -37,22 +37,21 @@ func newPostgreRepo() *PostgreRepo {
 	return &PostgreRepo{db: db}
 }
 
-
 func (repo *PostgreRepo) FindByCode(code string) (string, error) {
-    var result struct {
-        OriginalURL string
-    }
+	var result struct {
+		OriginalURL string
+	}
 
-    err := repo.db.
-        Model(&model.Link{}).
-        Select("original_url").
-        Where("code = ?", code).
-        Take(&result).Error
+	err := repo.db.
+		Model(&model.Link{}).
+		Select("original_url").
+		Where("code = ?", code).
+		Take(&result).Error
 
-    if err != nil {
+	if err != nil {
 		log.Println("MONKE 1")
-        return "", err
-    }
+		return "", err
+	}
 
-    return result.OriginalURL, nil
+	return result.OriginalURL, nil
 }

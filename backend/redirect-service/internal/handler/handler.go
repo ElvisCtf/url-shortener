@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"example.com/redirect-service/internal/service"
 	"net/http"
-	"redirect-service/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

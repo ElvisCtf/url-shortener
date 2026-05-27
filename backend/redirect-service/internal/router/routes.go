@@ -1,10 +1,10 @@
 package router
 
 import (
-	"redirect-service/internal/handler"
-	"redirect-service/internal/service"
+	"example.com/redirect-service/internal/handler"
+	"example.com/redirect-service/internal/service"
 
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(service *service.Redirect) *gin.Engine {

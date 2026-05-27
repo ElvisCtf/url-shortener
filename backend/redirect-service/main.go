@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"redirect-service/internal/repository"
-	"redirect-service/internal/router"
-	"redirect-service/internal/service"
-	"redirect-service/internal/util"
+	"example.com/redirect-service/internal/repository"
+	"example.com/redirect-service/internal/router"
+	"example.com/redirect-service/internal/service"
+	"example.com/redirect-service/internal/util"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	repo := repository.NewRepo()
 	service := service.NewRedirect(repo)
 	router := router.SetupRouter(service)
-	
+
 	if err := router.Run(addr); err != nil {
 		log.Fatalf("startup service failed, err: %v\n", err)
 	}

@@ -1,4 +1,4 @@
-module redirect-service
+module example.com/redirect-service
 
 go 1.25.6
 

@@ -1,6 +1,6 @@
 package service
 
-import "redirect-service/internal/repository"
+import "example.com/redirect-service/internal/repository"
 
 type Redirect struct {
 	repo repository.Repository
