@@ -63,6 +63,11 @@ func (s *AuthService) Refresh(refreshToken string) (*TokenPair, error) {
 		return nil, err
 	}
 
+	err = s.repo.RevokeRefreshTokens(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
 	return s.generateJWTs(admin)
 }
 
