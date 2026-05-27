@@ -50,6 +50,68 @@ func (s *AuthService) Login(email, password string) (*TokenPair, error) {
 		return nil, err
 	}
 
+	return s.generateJWTs(admin)
+}
+
+func (s *AuthService) Logout(refreshToken string) error {
+	return s.repo.RevokeRefreshTokens(refreshToken)
+}
+
+func (s *AuthService) Refresh(refreshToken string) (*TokenPair, error) {
+	admin, err := s.getAdminByRefreshToken(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.generateJWTs(admin)
+}
+
+func (s *AuthService) getAdminByRefreshToken(refreshToken string) (*database.Admin, error) {
+	// Step 1: Parse and verify JWT
+	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.JWTSecret), nil
+	})
+	if err != nil || !token.Valid {
+		return nil, errors.New("invalid refresh token (JWT parse failed)")
+	}
+
+	// Step 2: Extract admin_id from claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+	adminIDFloat, ok := claims["admin_id"].(float64)
+	if !ok {
+		return nil, errors.New("admin_id not found in token claims")
+	}
+	adminID := uint(adminIDFloat)
+
+	// Step 3: Search DB for refresh token record
+	rt, err := s.repo.GetRefreshToken(refreshToken)
+	if err != nil {
+		return nil, errors.New("refresh token not found in DB")
+	}
+	if rt.Revoked {
+		return nil, errors.New("refresh token is revoked")
+	}
+	if time.Now().After(rt.ExpiresAt) {
+		return nil, errors.New("refresh token is expired")
+	}
+
+	// Step 4: Cross-check admin_id
+	if rt.AdminID != adminID {
+		return nil, errors.New("admin_id mismatch between token and DB")
+	}
+
+	// Fetch admin from DB (optional, but usually needed for login/rotation)
+	admin, err := s.repo.GetAdminByID(adminID)
+	if err != nil {
+		return nil, errors.New("admin not found")
+	}
+	return admin, nil
+}
+
+func (s *AuthService) generateJWTs(admin *database.Admin) (*TokenPair, error) {
 	accessTokenExpire := s.config.AccessTokenExpire
 	refreshTokenExpire := s.config.RefreshTokenExpire
 
@@ -79,10 +141,6 @@ func (s *AuthService) Login(email, password string) (*TokenPair, error) {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
-}
-
-func (s *AuthService) Logout(refreshToken string) error {
-	return s.repo.RevokeRefreshTokens(refreshToken)
 }
 
 func generateJWTWithSecret(adminID uint, email string, seconds int, secret string) (string, error) {
