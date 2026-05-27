@@ -9,8 +9,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// RequireAuth returns a middleware that checks for a valid JWT in Authentication Header if required.
-func RequireAuth(config *util.Config, required bool) gin.HandlerFunc {
+// RequireAccessToken returns a middleware that checks for a valid JWT in Authentication Header if required.
+func RequireAccessToken(config *util.Config, required bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !required {
 			c.Next()

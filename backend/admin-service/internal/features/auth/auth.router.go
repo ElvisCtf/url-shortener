@@ -18,11 +18,11 @@ func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup, config *util.Config) {
 	authGroup := rg.Group("/auth")
 
 	// /auth/admins requires JWT (only root admin can register a new admin)
-	authGroup.POST("/admins", RequireAuth(config, true), r.controller.Register)
+	authGroup.POST("/admins", RequireAccessToken(config, true), r.controller.Register)
 
-	authGroup.POST("/login", RequireAuth(config, false), r.controller.Login)
+	authGroup.POST("/login", RequireAccessToken(config, false), r.controller.Login)
 
-	authGroup.POST("/logout", RequireAuth(config, true), r.controller.Logout)
+	authGroup.POST("/logout", RequireAccessToken(config, true), r.controller.Logout)
 
-	authGroup.POST("/refresh", RequireAuth(config, false), r.controller.Refresh)
+	authGroup.POST("/refresh", RequireAccessToken(config, false), r.controller.Refresh)
 }
