@@ -1,4 +1,4 @@
-module shorten-service
+module example.com/shorten-service
 
 go 1.25.6
 

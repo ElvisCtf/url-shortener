@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"log"
 
-	"shorten-service/internal/model"
-	"shorten-service/internal/util"
+	"example.com/shorten-service/internal/model"
+	"example.com/shorten-service/internal/util"
 
 	"gorm.io/driver/postgres"
-	"gorm.io/gorm/clause"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PostgreRepo struct {
-    db *gorm.DB
+	db *gorm.DB
 }
 
 func NewPostgreRepo() *PostgreRepo {
@@ -30,12 +30,12 @@ func NewPostgreRepo() *PostgreRepo {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil { 
+	if err != nil {
 		log.Fatal(err)
 		return nil
 	}
 
-	if migrateErr := db.AutoMigrate(&model.Link{}); migrateErr != nil { 
+	if migrateErr := db.AutoMigrate(&model.Link{}); migrateErr != nil {
 		log.Fatal(err)
 	}
 
@@ -43,21 +43,21 @@ func NewPostgreRepo() *PostgreRepo {
 }
 
 func (repo *PostgreRepo) Save(originalURL string) (string, error) {
-    link := &model.Link{OriginalURL: originalURL}
+	link := &model.Link{OriginalURL: originalURL}
 
-    // use UPSERT to insert new record
+	// use UPSERT to insert new record
 	// if new URL, then insert and return the code
-	// if old URL, then do a no-op update and return the code 
-    err := repo.db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "original_url"}},
-			DoUpdates: clause.Assignments(map[string]any{
-					"original_url": gorm.Expr("EXCLUDED.original_url"),
-			}),
-		}).Create(link).Error
-		
+	// if old URL, then do a no-op update and return the code
+	err := repo.db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "original_url"}},
+		DoUpdates: clause.Assignments(map[string]any{
+			"original_url": gorm.Expr("EXCLUDED.original_url"),
+		}),
+	}).Create(link).Error
+
 	if err != nil {
 		return "", err
-    }
+	}
 
-    return link.Code, nil
+	return link.Code, nil
 }

@@ -1,25 +1,25 @@
 package service
 
 import (
-	"shorten-service/internal/model"
-	"shorten-service/internal/repository"
+	"example.com/shorten-service/internal/model"
+	"example.com/shorten-service/internal/repository"
 )
 
 type Shorten struct {
 	baseURL string
-    repo repository.Repository
+	repo    repository.Repository
 }
 
 func NewShorten(baseURL string, repo repository.Repository) *Shorten {
-    return &Shorten{baseURL: baseURL, repo: repo}
+	return &Shorten{baseURL: baseURL, repo: repo}
 }
 
 func (s *Shorten) Create(originalURL string) *model.ShortenResponse {
 	code, err := s.repo.Save(originalURL)
 	if err == nil {
-		resp := model.ShortenResponse {
+		resp := model.ShortenResponse{
 			OriginalURL: originalURL,
-			ShortenURL: s.baseURL + "/" + code,
+			ShortenURL:  s.baseURL + "/" + code,
 		}
 		return &resp
 	} else {

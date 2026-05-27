@@ -1,10 +1,10 @@
 package router
 
 import (
-	"shorten-service/internal/handler"
-	"shorten-service/internal/service"
+	"example.com/shorten-service/internal/handler"
+	"example.com/shorten-service/internal/service"
 
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(service *service.Shorten) *gin.Engine {
