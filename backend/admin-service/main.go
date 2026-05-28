@@ -2,6 +2,7 @@ package main
 
 import (
 	"example.com/admin-service/internal/features/auth"
+	"example.com/admin-service/internal/features/link"
 	"example.com/shared"
 	"example.com/shared/postgres"
 	"github.com/gin-gonic/gin"
@@ -28,8 +29,14 @@ func main() {
 	authController := auth.NewAuthController(authService, config)
 	authRouter := auth.NewAuthRouter(authController)
 
+	linkRepo := link.NewLinkRepository(db)
+	linkService := link.NewLinkService(linkRepo, config)
+	linkController := link.NewLinkController(linkService, config)
+	linkRouter := link.NewLinkRouter(linkController)
+
 	// Setup Routes
 	authRouter.SetupRoutes(&router.RouterGroup, config)
+	linkRouter.SetupRoutes(&router.RouterGroup, config)
 
 	router.Run(addr)
 }
