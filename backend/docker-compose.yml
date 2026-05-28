@@ -35,8 +35,8 @@ services:
     
   redirect:
     build:
-      context: ./redirect-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: redirect-service/Dockerfile
     container_name: redirect_service
     ports:
       - "8081:8081"

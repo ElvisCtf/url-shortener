@@ -1,22 +1,35 @@
 package main
 
 import (
-	"log"
-
-	"example.com/redirect-service/internal/repository"
-	"example.com/redirect-service/internal/router"
-	"example.com/redirect-service/internal/service"
-	"example.com/redirect-service/internal/util"
+	"example.com/redirect-service/internal/features/redirect"
+	"example.com/shared"
+	"example.com/shared/postgres"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	addr := util.Env("ADDR", ":8081")
-
-	repo := repository.NewRepo()
-	service := service.NewRedirect(repo)
-	router := router.SetupRouter(service)
-
-	if err := router.Run(addr); err != nil {
-		log.Fatalf("startup service failed, err: %v\n", err)
+	config, err := shared.LoadConfig()
+	if err != nil {
+		panic("Failed to load config: " + err.Error())
 	}
+	addr := config.Addr
+	gin.SetMode(config.GinMode)
+
+	router := gin.Default()
+
+	db, err := postgres.InitGormDB(config)
+	if err != nil {
+		panic("Failed to connect to database: " + err.Error())
+	}
+
+	// Dependency Injection
+	redirectRepo := redirect.NewRedirectRepository(db)
+	redirectService := redirect.NewRedirectService(redirectRepo)
+	redirectController := redirect.NewRedirectController(redirectService, config)
+	redirectRouter := redirect.NewRedirectRouter(redirectController)
+
+	// Setup Routes
+	redirectRouter.SetupRoutes(&router.RouterGroup, config)
+
+	router.Run(addr)
 }

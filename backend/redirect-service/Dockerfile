@@ -7,13 +7,25 @@ ENV CGO_ENABLED=0 \
 
 WORKDIR /build
 
-COPY go.mod go.sum ./
+# 1. Copy go.work and all module definitions to leverage Docker caching
+COPY go.work ./
+COPY shared/go.mod shared/go.sum ./shared/
+COPY redirect-service/go.mod redirect-service/go.sum ./redirect-service/
+COPY shorten-service/go.mod shorten-service/go.sum ./shorten-service/
+COPY admin-service/go.mod admin-service/go.sum ./admin-service/
 
+# 2. Download dependencies for the specific service module
+WORKDIR /build/redirect-service
 RUN go mod download
 
-COPY . .
+# 3. Copy the actual source code for both modules
+WORKDIR /build
+COPY shared/ ./shared/
+COPY redirect-service/ ./redirect-service/
 
-RUN go build -o /app .
+# 4. Build from the service directory
+WORKDIR /build/redirect-service
+RUN go build -o /app ./main.go
 
 # Stage 2: Run
 FROM alpine:3.21 AS final
@@ -22,4 +34,4 @@ COPY --from=builder /app /bin/app
 
 EXPOSE 8081
 
-CMD ["bin/app"]
+CMD ["/bin/app"] 
