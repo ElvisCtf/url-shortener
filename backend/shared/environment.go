@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Addr               string
 	Domain             string
+	Redirect           string
 	GinMode            string
 	DBHost             string
 	DBPort             string
@@ -28,6 +29,7 @@ func LoadConfig() (*Config, error) {
 	return &Config{
 		Addr:               getEnv("ADDR", ":8082"),
 		Domain:             getEnv("DOMAIN", "localhost"),
+		Redirect:           getEnv("REDIRECT", "http://localhost:8081"),
 		GinMode:            getEnv("GIN_MODE", "debug"),
 		DBHost:             getEnv("DB_HOST", "postgres16"),
 		DBPort:             getEnv("DB_PORT", "5432"),

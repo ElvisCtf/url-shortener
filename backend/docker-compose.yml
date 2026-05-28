@@ -20,8 +20,8 @@ services:
 
   shorten:
     build:
-      context: ./shorten-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: shorten-service/Dockerfile
     container_name: shorten_service
     ports:
       - "8080:8080"
