@@ -1,9 +1,10 @@
 package shorten
 
 import (
-	"example.com/shared/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"example.com/shared/postgres"
 )
 
 type ShortenRepository struct {

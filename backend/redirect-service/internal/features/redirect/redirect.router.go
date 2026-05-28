@@ -1,8 +1,9 @@
 package redirect
 
 import (
-	"example.com/shared"
 	"github.com/gin-gonic/gin"
+
+	"example.com/shared"
 )
 
 type RedirectRouter struct {

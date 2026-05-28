@@ -1,10 +1,11 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"example.com/shared"
 	"example.com/shared/postgres"
 	"example.com/shorten-service/internal/features/shorten"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {

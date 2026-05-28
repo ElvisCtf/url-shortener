@@ -1,10 +1,12 @@
 package redirect
 
 import (
-	"example.com/shared"
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"example.com/shared"
 )
 
 type RedirectController struct {

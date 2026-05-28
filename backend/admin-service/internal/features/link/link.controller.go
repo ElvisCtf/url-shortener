@@ -1,9 +1,10 @@
 package link
 
 import (
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	"example.com/shared"
 )

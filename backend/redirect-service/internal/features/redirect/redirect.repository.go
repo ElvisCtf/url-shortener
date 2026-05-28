@@ -2,8 +2,10 @@ package redirect
 
 import (
 	"errors"
-	"example.com/shared/postgres"
+
 	"gorm.io/gorm"
+
+	"example.com/shared/postgres"
 )
 
 var (
