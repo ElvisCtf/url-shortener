@@ -21,14 +21,14 @@ func NewAuthController(s *AuthService, config *shared.Config) *AuthController {
 func (c *AuthController) Register(ctx *gin.Context) {
 	var req RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		slog.Error("Register: invalid request", "error", err)
+		slog.Error("AuthController Register: invalid request", "error", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	_, err := c.service.Register(req.Email, req.Password)
 	if err != nil {
-		slog.Error("Register: failed to register", "error", err)
+		slog.Error("AuthController Register: failed to register", "error", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Registration failed"})
 		return
 	}
@@ -39,14 +39,14 @@ func (c *AuthController) Register(ctx *gin.Context) {
 func (c *AuthController) Login(ctx *gin.Context) {
 	var req LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		slog.Error("Login: invalid request", "error", err)
+		slog.Error("AuthController Login: invalid request", "error", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	tokens, err := c.service.Login(req.Email, req.Password)
 	if err != nil {
-		slog.Error("Login: invalid credentials", "error", err)
+		slog.Error("AuthController Login: invalid credentials", "error", err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
@@ -60,13 +60,13 @@ func (c *AuthController) Login(ctx *gin.Context) {
 func (c *AuthController) Logout(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refreshToken")
 	if err != nil || refreshToken == "" {
-		slog.Error("Logout: missing refresh token cookie", "error", err)
+		slog.Error("AuthController Logout: missing refresh token cookie", "error", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing refresh token cookie"})
 		return
 	}
 
 	if err := c.service.Logout(refreshToken); err != nil {
-		slog.Error("Logout: failed to logout", "error", err)
+		slog.Error("AuthController Logout: failed to logout", "error", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to logout"})
 		return
 	}
@@ -78,14 +78,14 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 func (c *AuthController) Refresh(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refreshToken")
 	if err != nil || refreshToken == "" {
-		slog.Error("Refresh: missing refresh token cookie", "error", err)
+		slog.Error("AuthController Refresh: missing refresh token cookie", "error", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing refresh token cookie"})
 		return
 	}
 
 	tokens, err := c.service.Refresh(refreshToken)
 	if err != nil {
-		slog.Error("Refresh: failed to refresh token", "error", err)
+		slog.Error("AuthController Refresh: failed to refresh token", "error", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to refresh token"})
 		return
 	}

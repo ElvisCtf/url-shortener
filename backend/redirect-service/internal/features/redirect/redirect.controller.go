@@ -3,6 +3,7 @@ package redirect
 import (
 	"example.com/shared"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 	"net/http"
 )
 
@@ -23,6 +24,7 @@ func (c *RedirectController) Redirect(ctx *gin.Context) {
 	if err == nil && originalURL != "" {
 		ctx.Redirect(http.StatusFound, originalURL)
 	} else {
+		slog.Error("RedirectController Redirect: failed to find original URL", "code", code, "error", err)
 		ctx.Status(http.StatusNotFound)
 	}
 }
