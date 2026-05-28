@@ -18,7 +18,7 @@ func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup, config *shared.Config) {
 	authGroup := rg.Group("/auth")
 
 	// /auth/admins requires JWT (only root admin can register a new admin)
-	authGroup.POST("/admins", RequireAccessToken(config, true), r.controller.Register)
+	authGroup.POST("/admins", RequireAccessToken(config, shared.IsSecure()), r.controller.Register)
 
 	authGroup.POST("/login", RequireAccessToken(config, false), r.controller.Login)
 

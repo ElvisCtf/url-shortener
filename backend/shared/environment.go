@@ -60,5 +60,6 @@ func getEnv(key, defaultVal string) string {
 }
 
 func IsSecure() bool {
-	return os.Getenv("GIN_MODE") == "release"
+	ginMode := os.Getenv("GIN_MODE")
+	return ginMode == "release"
 }
