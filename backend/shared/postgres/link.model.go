@@ -1,9 +1,11 @@
 package postgres
 
 import (
-	"example.com/shared/util"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
+
+	"example.com/shared/util"
 )
 
 type Link struct {

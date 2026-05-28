@@ -1,10 +1,12 @@
 package postgres
 
 import (
-	"example.com/shared"
 	"fmt"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"example.com/shared"
 )
 
 func InitGormDB(cfg *shared.Config) (*gorm.DB, error) {

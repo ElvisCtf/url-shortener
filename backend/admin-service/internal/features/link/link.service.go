@@ -1,8 +1,9 @@
 package link
 
 import (
-	"example.com/shared"
 	"math"
+
+	"example.com/shared"
 )
 
 type LinkService struct {

@@ -1,9 +1,11 @@
 package link
 
 import (
-	"example.com/shared"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"example.com/shared"
 )
 
 type LinkController struct {

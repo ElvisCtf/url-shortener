@@ -2,9 +2,10 @@ package auth
 
 import (
 	"errors"
+	"time"
+
 	"example.com/shared"
 	"example.com/shared/postgres"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

@@ -1,8 +1,9 @@
 package link
 
 import (
-	"example.com/shared/postgres"
 	"gorm.io/gorm"
+
+	"example.com/shared/postgres"
 )
 
 type LinkRepository struct {

@@ -1,11 +1,12 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"example.com/admin-service/internal/features/auth"
 	"example.com/admin-service/internal/features/link"
 	"example.com/shared"
 	"example.com/shared/postgres"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {

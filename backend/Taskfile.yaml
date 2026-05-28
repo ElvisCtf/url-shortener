@@ -10,3 +10,22 @@ tasks:
     dir: shared/cmd/db-reset
     cmds:
       - go run main.go
+
+  init:goimports:
+    internal: true
+    # Check if the binary exists in GOPATH/bin instead of 'which'
+    status:
+      - test -f "$(go env GOPATH)/bin/goimports"
+    cmds:
+      - go install golang.org/x/tools/cmd/goimports@latest
+
+  import:format:
+    desc: "Format all Go files and correctly group imports"
+    deps: [init:goimports]
+    cmds:
+      # Call goimports from GOPATH/bin
+      - $(go env GOPATH)/bin/goimports -w -local "example.com/admin-service,example.com/redirect-service,example.com/shorten-service,example.com/shared" .
+      # Call gofmt from GOROOT/bin
+      - $(go env GOROOT)/bin/gofmt -s -w .
+
+

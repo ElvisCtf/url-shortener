@@ -1,9 +1,10 @@
 package auth
 
 import (
-	"example.com/shared"
 	"net/http"
 	"strings"
+
+	"example.com/shared"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

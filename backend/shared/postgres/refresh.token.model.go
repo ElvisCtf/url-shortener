@@ -1,8 +1,9 @@
 package postgres
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type RefreshToken struct {

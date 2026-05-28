@@ -9,5 +9,5 @@ type Repository interface {
 }
 
 func NewRepo() Repository {
-    return newPostgreRepo()
+	return newPostgreRepo()
 }

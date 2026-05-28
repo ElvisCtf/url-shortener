@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"log"
+
+	"gorm.io/gorm"
+
 	"example.com/shared"
 	"example.com/shared/postgres"
-	"fmt"
-	"gorm.io/gorm"
-	"log"
 )
 
 func main() {
