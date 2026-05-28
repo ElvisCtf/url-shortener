@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"example.com/admin-service/internal/util"
+	"example.com/shared"
 	"net/http"
 	"strings"
 
@@ -10,7 +10,7 @@ import (
 )
 
 // RequireAccessToken returns a middleware that checks for a valid JWT in Authentication Header if required.
-func RequireAccessToken(config *util.Config, required bool) gin.HandlerFunc {
+func RequireAccessToken(config *shared.Config, required bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !required {
 			c.Next()

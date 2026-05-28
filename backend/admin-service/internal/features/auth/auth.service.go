@@ -2,8 +2,8 @@ package auth
 
 import (
 	"errors"
-	"example.com/admin-service/internal/util"
-	"example.com/admin-service/internal/util/database"
+	"example.com/shared"
+	"example.com/shared/postgres"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,7 +12,7 @@ import (
 
 type AuthService struct {
 	repo   *AuthRepository
-	config *util.Config
+	config *shared.Config
 }
 
 type TokenPair struct {
@@ -20,7 +20,7 @@ type TokenPair struct {
 	RefreshToken string
 }
 
-func NewAuthService(repo *AuthRepository, config *util.Config) *AuthService {
+func NewAuthService(repo *AuthRepository, config *shared.Config) *AuthService {
 	return &AuthService{repo: repo, config: config}
 }
 
@@ -30,7 +30,7 @@ func (s *AuthService) Register(email, password string) (bool, error) {
 		return false, hashErr
 	}
 
-	if dbErr := s.repo.CreateAdmin(&database.Admin{
+	if dbErr := s.repo.CreateAdmin(&postgres.Admin{
 		Email:        email,
 		HashPassword: string(hashPassword),
 	}); dbErr != nil {
@@ -71,7 +71,7 @@ func (s *AuthService) Refresh(refreshToken string) (*TokenPair, error) {
 	return s.generateJWTs(admin)
 }
 
-func (s *AuthService) getAdminByRefreshToken(refreshToken string) (*database.Admin, error) {
+func (s *AuthService) getAdminByRefreshToken(refreshToken string) (*postgres.Admin, error) {
 	// Step 1: Parse and verify JWT
 	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWTSecret), nil
@@ -116,7 +116,7 @@ func (s *AuthService) getAdminByRefreshToken(refreshToken string) (*database.Adm
 	return admin, nil
 }
 
-func (s *AuthService) generateJWTs(admin *database.Admin) (*TokenPair, error) {
+func (s *AuthService) generateJWTs(admin *postgres.Admin) (*TokenPair, error) {
 	accessTokenExpire := s.config.AccessTokenExpire
 	refreshTokenExpire := s.config.RefreshTokenExpire
 
@@ -131,7 +131,7 @@ func (s *AuthService) generateJWTs(admin *database.Admin) (*TokenPair, error) {
 	}
 
 	// Save refresh token in DB
-	rt := &database.RefreshToken{
+	rt := &postgres.RefreshToken{
 		AdminID:   admin.ID,
 		Token:     refreshToken,
 		ExpiresAt: time.Now().Add(time.Duration(refreshTokenExpire) * time.Second),

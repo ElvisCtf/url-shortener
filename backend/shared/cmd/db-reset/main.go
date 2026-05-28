@@ -1,22 +1,22 @@
 package main
 
 import (
-	"example.com/admin-service/internal/util"
-	"example.com/admin-service/internal/util/database"
+	"example.com/shared"
+	"example.com/shared/postgres"
 	"fmt"
 	"gorm.io/gorm"
 	"log"
 )
 
 func main() {
-	config, err := util.LoadConfig()
+	config, err := shared.LoadConfig()
 	config.DBHost = "localhost"
 	config.DBPort = "5430"
 
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
-	db, err := database.InitGormDB(config)
+	db, err := postgres.InitGormDB(config)
 	if err != nil {
 		log.Fatalf("failed to connect to db: %v", err)
 	}
@@ -28,10 +28,10 @@ func main() {
 
 // ResetDatabase drops all tables and re-applies migrations for Admin and RefreshToken models.
 func ResetDatabase(db *gorm.DB) error {
-	if err := db.Migrator().DropTable(&database.Admin{}, &database.RefreshToken{}); err != nil {
+	if err := db.Migrator().DropTable(&postgres.Admin{}, &postgres.RefreshToken{}); err != nil {
 		return err
 	}
-	if err := db.AutoMigrate(&database.Admin{}, &database.RefreshToken{}); err != nil {
+	if err := db.AutoMigrate(&postgres.Admin{}, &postgres.RefreshToken{}); err != nil {
 		return err
 	}
 	return nil

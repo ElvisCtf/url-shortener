@@ -25,7 +25,7 @@ COPY admin-service/ ./admin-service/
 
 # 4. Build from the service directory
 WORKDIR /build/admin-service
-RUN go build -o /app ./cmd/app/main.go
+RUN go build -o /app ./main.go
 
 # Stage 2: Run
 FROM alpine:3.21 AS final

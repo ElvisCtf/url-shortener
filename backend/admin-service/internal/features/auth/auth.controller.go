@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"example.com/admin-service/internal/util"
+	"example.com/shared"
 	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
@@ -9,10 +9,10 @@ import (
 
 type AuthController struct {
 	service *AuthService
-	config  *util.Config
+	config  *shared.Config
 }
 
-func NewAuthController(s *AuthService, config *util.Config) *AuthController {
+func NewAuthController(s *AuthService, config *shared.Config) *AuthController {
 	return &AuthController{service: s, config: config}
 }
 

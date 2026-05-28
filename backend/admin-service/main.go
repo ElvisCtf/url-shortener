@@ -2,14 +2,13 @@ package main
 
 import (
 	"example.com/admin-service/internal/features/auth"
-	"example.com/admin-service/internal/util"
-	"example.com/admin-service/internal/util/database"
-
+	"example.com/shared"
+	"example.com/shared/postgres"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	config, err := util.LoadConfig()
+	config, err := shared.LoadConfig()
 	if err != nil {
 		panic("Failed to load config: " + err.Error())
 	}
@@ -18,7 +17,7 @@ func main() {
 
 	router := gin.Default()
 
-	db, err := database.InitGormDB(config)
+	db, err := postgres.InitGormDB(config)
 	if err != nil {
 		panic("Failed to connect to database: " + err.Error())
 	}

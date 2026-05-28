@@ -1,4 +1,4 @@
-package database
+package postgres
 
 import (
 	"time"
@@ -12,13 +12,4 @@ type Admin struct {
 	UpdatedAt    time.Time
 
 	RefreshTokens []RefreshToken `gorm:"foreignKey:AdminID;constraint:OnDelete:CASCADE"`
-}
-
-type RefreshToken struct {
-	ID        uint      `gorm:"primaryKey"`
-	AdminID   uint      `gorm:"not null;index"`
-	Token     string    `gorm:"type:varchar(255);uniqueIndex;not null"`
-	ExpiresAt time.Time `gorm:"not null;index"`
-	CreatedAt time.Time
-	Revoked   bool `gorm:"default:false;not null;index"`
 }

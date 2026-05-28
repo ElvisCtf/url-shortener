@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"example.com/admin-service/internal/util"
+	"example.com/shared"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +14,7 @@ func NewAuthRouter(c *AuthController) *AuthRouter {
 	return &AuthRouter{controller: c}
 }
 
-func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup, config *util.Config) {
+func (r *AuthRouter) SetupRoutes(rg *gin.RouterGroup, config *shared.Config) {
 	authGroup := rg.Group("/auth")
 
 	// /auth/admins requires JWT (only root admin can register a new admin)
