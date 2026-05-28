@@ -50,8 +50,8 @@ services:
 
   admin:
     build:
-      context: ./admin-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: admin-service/Dockerfile
     container_name: admin_service
     ports:
       - "8082:8082"
