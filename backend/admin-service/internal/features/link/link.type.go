@@ -15,3 +15,8 @@ type LinksResponse struct {
 	PageSize   int             `json:"page_size"`
 	TotalPages int             `json:"total_pages"`
 }
+
+type BulkActiveUpdateRequest struct {
+	IDs    []uint `json:"ids" binding:"required"`
+	Active *bool  `json:"active" binding:"required"`
+}

@@ -39,3 +39,7 @@ func (r *LinkRepository) GetPaginated(page, pageSize int, order string) ([]postg
 	err := r.Db.Order(order).Limit(pageSize).Offset(offset).Find(&links).Error
 	return links, totalCount, err
 }
+
+func (r *LinkRepository) BulkUpdateActive(ids []uint, active bool) error {
+	return r.Db.Model(&postgres.Link{}).Where("id IN ?", ids).Update("active", active).Error
+}

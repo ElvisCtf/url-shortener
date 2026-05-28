@@ -16,7 +16,8 @@ func NewLinkRouter(c *LinkController) *LinkRouter {
 }
 
 func (r *LinkRouter) SetupRoutes(rg *gin.RouterGroup, config *shared.Config) {
-	linkGroup := rg.Group("/api/v1")
+	group := rg.Group("/api/v1")
 
-	linkGroup.GET("/links", auth.RequireAccessToken(config, true), r.controller.GetLinks)
+	group.GET("/links", auth.RequireAccessToken(config, true), r.controller.GetLinks)
+	group.POST("/links/bulk-active", auth.RequireAccessToken(config, true), r.controller.BulkUpdateActive)
 }

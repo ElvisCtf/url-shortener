@@ -38,3 +38,7 @@ func (s *LinkService) GetLinks(query LinksQuery) (*LinksResponse, error) {
 		TotalPages: totalPages,
 	}, nil
 }
+
+func (s *LinkService) BulkUpdateActive(ids []uint, active bool) error {
+	return s.repo.BulkUpdateActive(ids, active)
+}
