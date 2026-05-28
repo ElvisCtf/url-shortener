@@ -28,12 +28,12 @@ func main() {
 	fmt.Println("Database reset successfully!")
 }
 
-// ResetDatabase drops all tables and re-applies migrations for Admin and RefreshToken models.
+// ResetDatabase drops all tables and re-applies migrations for Admin, RefreshToken, and Link models.
 func ResetDatabase(db *gorm.DB) error {
-	if err := db.Migrator().DropTable(&postgres.Admin{}, &postgres.RefreshToken{}); err != nil {
+	if err := db.Migrator().DropTable(&postgres.Admin{}, &postgres.RefreshToken{}, &postgres.Link{}); err != nil {
 		return err
 	}
-	if err := db.AutoMigrate(&postgres.Admin{}, &postgres.RefreshToken{}); err != nil {
+	if err := db.AutoMigrate(&postgres.Admin{}, &postgres.RefreshToken{}, &postgres.Link{}); err != nil {
 		return err
 	}
 	return nil

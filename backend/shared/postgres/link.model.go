@@ -13,6 +13,7 @@ type Link struct {
 	Code        string `gorm:"size:16;uniqueIndex;not null"`
 	OriginalURL string `gorm:"uniqueIndex;not null"`
 	CreatedAt   time.Time
+	Active      bool `gorm:"default:true;not null"`
 }
 
 func (l *Link) AfterCreate(tx *gorm.DB) (err error) {

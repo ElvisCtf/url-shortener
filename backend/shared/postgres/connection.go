@@ -18,8 +18,8 @@ func InitGormDB(cfg *shared.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// Auto-migrate Admin and RefreshToken models
-	if err := db.AutoMigrate(&Admin{}, &RefreshToken{}); err != nil {
+	// Auto-migrate Admin, RefreshToken, and Link models
+	if err := db.AutoMigrate(&Admin{}, &RefreshToken{}, &Link{}); err != nil {
 		return nil, err
 	}
 
