@@ -12,8 +12,9 @@ type Link struct {
 	ID          uint   `gorm:"primaryKey"`
 	Code        string `gorm:"size:16;uniqueIndex;not null"`
 	OriginalURL string `gorm:"uniqueIndex;not null"`
+	Clicks      uint   `gorm:"default:0;not null"`
+	Active      bool   `gorm:"default:true;not null"`
 	CreatedAt   time.Time
-	Active      bool `gorm:"default:true;not null"`
 }
 
 func (l *Link) AfterCreate(tx *gorm.DB) (err error) {

@@ -1,6 +1,7 @@
 package redirect
 
 import (
+	"context"
 	"errors"
 
 	"gorm.io/gorm"
@@ -38,4 +39,10 @@ func (r *RedirectRepository) FindByCode(code string) (string, error) {
 	}
 
 	return link.OriginalURL, nil
+}
+
+func (r *RedirectRepository) AddClicks(ctx context.Context, code string) error {
+	return r.db.WithContext(ctx).Model(&postgres.Link{}).
+		Where("code = ?", code).
+		Update("clicks", gorm.Expr("clicks + ?", 1)).Error
 }
