@@ -20,7 +20,7 @@ func RequireAccessToken(config *shared.Config) gin.HandlerFunc {
 		}
 
 		tokenStr := strings.TrimPrefix(header, "Bearer ")
-		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenStr, &AdminClaims{}, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrSignatureInvalid
 			}

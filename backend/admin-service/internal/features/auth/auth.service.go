@@ -21,6 +21,13 @@ type TokenPair struct {
 	RefreshToken string
 }
 
+// typed JWT claims struct used for both access and refresh tokens.
+type AdminClaims struct {
+	AdminID uint   `json:"admin_id"`
+	Email   string `json:"email"`
+	jwt.RegisteredClaims
+}
+
 func NewAuthService(repo *AuthRepository, config *shared.Config) *AuthService {
 	return &AuthService{repo: repo, config: config}
 }
@@ -73,26 +80,21 @@ func (s *AuthService) Refresh(refreshToken string) (*TokenPair, error) {
 }
 
 func (s *AuthService) getAdminByRefreshToken(refreshToken string) (*postgres.Admin, error) {
-	// Step 1: Parse and verify JWT
-	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+	// Step 1: Parse and verify JWT with typed claims
+	claims := &AdminClaims{}
+	token, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid
+		}
 		return []byte(s.config.JWTSecret), nil
 	})
 	if err != nil || !token.Valid {
 		return nil, errors.New("invalid refresh token (JWT parse failed)")
 	}
 
-	// Step 2: Extract admin_id from claims
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return nil, errors.New("invalid token claims")
-	}
-	adminIDFloat, ok := claims["admin_id"].(float64)
-	if !ok {
-		return nil, errors.New("admin_id not found in token claims")
-	}
-	adminID := uint(adminIDFloat)
+	adminID := claims.AdminID
 
-	// Step 3: Search DB for refresh token record
+	// Step 2: Search DB for refresh token record
 	rt, err := s.repo.GetRefreshToken(refreshToken)
 	if err != nil {
 		return nil, errors.New("refresh token not found in DB")
@@ -154,10 +156,12 @@ func generateJWTWithSecret(adminID uint, email string, seconds int, secret strin
 		return "", errors.New("JWT_SECRET not set")
 	}
 	duration := time.Duration(seconds) * time.Second
-	claims := jwt.MapClaims{
-		"admin_id": adminID,
-		"email":    email,
-		"exp":      jwt.NewNumericDate(time.Now().Add(duration)),
+	claims := AdminClaims{
+		AdminID: adminID,
+		Email:   email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))
