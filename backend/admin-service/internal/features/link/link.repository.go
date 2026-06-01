@@ -14,6 +14,11 @@ func NewLinkRepository(db *gorm.DB) *LinkRepository {
 	return &LinkRepository{Db: db}
 }
 
+var allowedOrders = map[string]string{
+	"asc":  "id ASC",
+	"desc": "id DESC",
+}
+
 func (r *LinkRepository) GetPaginated(page, pageSize int, order string) ([]postgres.Link, int64, error) {
 	var links []postgres.Link
 	var totalCount int64
@@ -30,13 +35,16 @@ func (r *LinkRepository) GetPaginated(page, pageSize int, order string) ([]postg
 	if pageSize <= 0 {
 		pageSize = 10
 	}
-	if order == "" {
-		order = "id desc"
+
+	// Whitelist order values to prevent SQL injection
+	safeOrder, ok := allowedOrders[order]
+	if !ok {
+		safeOrder = "id DESC"
 	}
 
 	offset := (page - 1) * pageSize
 
-	err := r.Db.Order(order).Limit(pageSize).Offset(offset).Find(&links).Error
+	err := r.Db.Order(safeOrder).Limit(pageSize).Offset(offset).Find(&links).Error
 	return links, totalCount, err
 }
 
