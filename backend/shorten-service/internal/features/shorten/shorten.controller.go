@@ -1,6 +1,7 @@
 package shorten
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -27,7 +28,7 @@ func (c *ShortenController) Shorten(ctx *gin.Context) {
 	}
 
 	response, err := c.service.Create(request.OriginalURL)
-	if err == ErrSSRF {
+	if errors.Is(err, ErrSSRF) {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "URL is not allowed"})
 		return
 	}

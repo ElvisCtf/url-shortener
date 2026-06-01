@@ -1,6 +1,7 @@
 package redirect
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -28,10 +29,10 @@ func (c *RedirectController) Redirect(ctx *gin.Context) {
 		return
 	}
 
-	switch err {
-	case ErrLinkNotFound:
+	switch {
+	case errors.Is(err, ErrLinkNotFound):
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "link not found"})
-	case ErrLinkInactive:
+	case errors.Is(err, ErrLinkInactive):
 		ctx.JSON(http.StatusGone, gin.H{"error": "link is no longer active"})
 	default:
 		slog.Error("RedirectController Redirect: failed to find original URL", "code", code, "error", err)
