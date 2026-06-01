@@ -28,14 +28,6 @@ func (r *LinkRepository) GetPaginated(page, pageSize int, order string) ([]postg
 		return nil, 0, err
 	}
 
-	// Apply default values if missing
-	if page <= 0 {
-		page = 1
-	}
-	if pageSize <= 0 {
-		pageSize = 10
-	}
-
 	// Whitelist order values to prevent SQL injection
 	safeOrder, ok := allowedOrders[order]
 	if !ok {
