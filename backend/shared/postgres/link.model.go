@@ -44,16 +44,3 @@ func (l *Link) BeforeCreate(tx *gorm.DB) error {
 	}
 	return errors.New("failed to generate a unique link code after 5 attempts")
 }
-
-func GetPaginatedLinks(db *gorm.DB, page, pageSize int, order string) ([]*Link, error) {
-	var links []*Link
-	offset := (page - 1) * pageSize
-	orderStr := "CreatedAt DESC"
-	if order == "asc" {
-		orderStr = "CreatedAt ASC"
-	}
-	if err := db.Limit(pageSize).Offset(offset).Order(orderStr).Find(&links).Error; err != nil {
-		return nil, err
-	}
-	return links, nil
-}
