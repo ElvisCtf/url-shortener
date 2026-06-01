@@ -25,8 +25,16 @@ func (c *RedirectController) Redirect(ctx *gin.Context) {
 
 	if err == nil && originalURL != "" {
 		ctx.Redirect(http.StatusFound, originalURL)
-	} else {
+		return
+	}
+
+	switch err {
+	case ErrLinkNotFound:
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "link not found"})
+	case ErrLinkInactive:
+		ctx.JSON(http.StatusGone, gin.H{"error": "link is no longer active"})
+	default:
 		slog.Error("RedirectController Redirect: failed to find original URL", "code", code, "error", err)
-		ctx.Status(http.StatusNotFound)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
 	}
 }

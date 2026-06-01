@@ -17,6 +17,5 @@ func NewShortenRouter(c *ShortenController) *ShortenRouter {
 func (r *ShortenRouter) SetupRoutes(rg *gin.RouterGroup, config *shared.Config) {
 	group := rg.Group("api/v1")
 
-	// /auth/admins requires JWT (only root admin can register a new admin)
-	group.POST("/shorten", r.controller.Shorten)
+	group.POST("/shorten", RateLimitByIP(), r.controller.Shorten)
 }
