@@ -26,11 +26,15 @@ func (c *ShortenController) Shorten(ctx *gin.Context) {
 		return
 	}
 
-	response := c.service.Create(request.OriginalURL)
-	if response != nil {
-		ctx.JSON(http.StatusOK, response)
-	} else {
-		slog.Error("ShortenController Shorten:Failed to create shortened URL", "original_url", request.OriginalURL)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+	response, err := c.service.Create(request.OriginalURL)
+	if err == ErrSSRF {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "URL is not allowed"})
+		return
 	}
+	if err != nil {
+		slog.Error("ShortenController Shorten: Failed to create shortened URL", "original_url", request.OriginalURL, "error", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		return
+	}
+	ctx.JSON(http.StatusOK, response)
 }
