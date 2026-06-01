@@ -11,13 +11,8 @@ import (
 )
 
 // RequireAccessToken returns a middleware that checks for a valid JWT in Authentication Header if required.
-func RequireAccessToken(config *shared.Config, required bool) gin.HandlerFunc {
+func RequireAccessToken(config *shared.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !required {
-			c.Next()
-			return
-		}
-
 		header := c.GetHeader("Authorization")
 		if header == "" || !strings.HasPrefix(header, "Bearer ") {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid Authorization header"})
