@@ -1,4 +1,3 @@
-
 # Go build files
 bin/
 build/
@@ -45,3 +44,18 @@ tmp/
 # Generated files
 coverage.txt
 dist/
+
+
+# React
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
