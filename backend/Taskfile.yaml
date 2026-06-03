@@ -1,17 +1,18 @@
 version: '3'
 
 tasks:
+  # Docker
   docker:up:
     cmds:
       - docker compose up --build
 
-  db:reset:
-    desc: Reset the admin-service database (drop and migrate tables)
-    dir: shared/cmd/db-reset
+  # Golang
+  init:workspace:
+    desc: "Initialize the workspace"
     cmds:
-      - go run main.go
+      - go work init ./admin-service ./redirect-service ./shorten-service ./shared
 
-  init:goimports:
+  install:goimports:
     internal: true
     # Check if the binary exists in GOPATH/bin instead of 'which'
     status:
@@ -21,11 +22,18 @@ tasks:
 
   import:format:
     desc: "Format all Go files and correctly group imports"
-    deps: [init:goimports]
+    deps: [install:goimports]
     cmds:
       # Call goimports from GOPATH/bin
       - $(go env GOPATH)/bin/goimports -w -local "example.com/admin-service,example.com/redirect-service,example.com/shorten-service,example.com/shared" .
       # Call gofmt from GOROOT/bin
       - $(go env GOROOT)/bin/gofmt -s -w .
+
+  # Database
+  db:reset:
+    desc: Reset the admin-service database (drop and migrate tables)
+    dir: shared/cmd/db-reset
+    cmds:
+      - go run main.go
 
 
