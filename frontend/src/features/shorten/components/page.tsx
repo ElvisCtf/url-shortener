@@ -14,6 +14,8 @@ import {
 import { Globe, Link2 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { useEffect, useState } from 'react'
+import { columns, type LinkRecord } from './columns'
+import { DataTable } from './data-table'
 
 interface ShortenedListProps {
   list: any[]
@@ -27,13 +29,23 @@ interface ShortenFormProps {
 export default function ShortenPage() {
   const [url, setUrl] = useState('')
   // todo: replace with actual data from backend
-  const [shortenedList, setShortenedList] = useState<any[]>([])
+  const [shortenList, setShortenList] = useState<LinkRecord[]>([])
+
+  useEffect(() => {
+    setShortenList([
+      {
+        id: '1',
+        originalUrl: 'https://example.com/very-long-destination-url-path',
+        shortUrl: 'https://snap.link/abc123',
+      },
+    ])
+  }, [])
 
   return (
     <main className="flex flex-col gap-8 items-stretch justify-start min-h-screen px-6 py-8 w-full max-w-2xl mx-auto">
       <Header />
       <ShortenForm url={url} setUrl={setUrl} />
-      <ShortenedList list={shortenedList} />
+      <ShortenedList list={shortenList} />
     </main>
   )
 }
@@ -101,10 +113,6 @@ function ShortenedList({ list }: ShortenedListProps) {
       </div>
     )
   } else {
-    return (
-      <div className="flex items-center justify-center rounded-2xl border border-border bg-secondary w-full min-h-[100px]">
-        <span className="text-sm text-muted-foreground">Results</span>
-      </div>
-    )
+    return <DataTable columns={columns} data={list} />
   }
 }
