@@ -18,7 +18,8 @@ import { columns, type LinkRecord } from './columns'
 import { DataTable } from './data-table'
 
 interface ShortenedListProps {
-  list: any[]
+  shortenList: LinkRecord[]
+  setShortenList: React.Dispatch<React.SetStateAction<LinkRecord[]>>
 }
 
 interface ShortenFormProps {
@@ -45,7 +46,10 @@ export default function ShortenPage() {
     <main className="flex flex-col gap-8 items-stretch justify-start min-h-screen px-6 py-8 w-full max-w-2xl mx-auto">
       <Header />
       <ShortenForm url={url} setUrl={setUrl} />
-      <ShortenedList list={shortenList} />
+      <ShortenedList
+        shortenList={shortenList}
+        setShortenList={setShortenList}
+      />
     </main>
   )
 }
@@ -65,7 +69,7 @@ function Header() {
 }
 
 function ShortenForm({ url, setUrl }: ShortenFormProps) {
-  const onSubmit = () => {
+  const submit = () => {
     // todo: call backend to shorten the URL and update the shortenedList state
   }
 
@@ -94,7 +98,7 @@ function ShortenForm({ url, setUrl }: ShortenFormProps) {
         <Button
           type="button"
           className="px-6 py-6 w-full sm:w-auto"
-          onClick={onSubmit}
+          onClick={submit}
         >
           Shorten →
         </Button>
@@ -103,8 +107,13 @@ function ShortenForm({ url, setUrl }: ShortenFormProps) {
   )
 }
 
-function ShortenedList({ list }: ShortenedListProps) {
-  if (list.length === 0) {
+function ShortenedList({ shortenList, setShortenList }: ShortenedListProps) {
+  const clearAll = () => {
+    // todo: clear local storage and update state
+    setShortenList([])
+  }
+
+  if (shortenList.length === 0) {
     return (
       <div className="flex items-center justify-center rounded-2xl border border-border bg-secondary w-full min-h-[100px]">
         <span className="text-sm text-muted-foreground">
@@ -113,6 +122,8 @@ function ShortenedList({ list }: ShortenedListProps) {
       </div>
     )
   } else {
-    return <DataTable columns={columns} data={list} />
+    return (
+      <DataTable columns={columns} data={shortenList} onClearAll={clearAll} />
+    )
   }
 }
